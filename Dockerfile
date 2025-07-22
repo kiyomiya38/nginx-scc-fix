@@ -1,12 +1,8 @@
 FROM nginxdemos/hello:0.4-plain-text
 
-# NGINX用キャッシュディレクトリを別に作成
-RUN mkdir -p /tmp/nginx && chmod -R 777 /tmp/nginx
+# nginx キャッシュ用ディレクトリを作成し、全ユーザー書き込み可能にする
+RUN mkdir -p /var/cache/nginx/client_temp && \
+    chmod -R 777 /var/cache/nginx
 
-# NGINX設定を上書きする例（任意）
-# COPY custom-nginx.conf /etc/nginx/nginx.conf
-
-# SCC restricted で動かせるよう非rootにする
+# 非rootユーザーで実行（OpenShift restricted SCC に対応）
 USER 1001
-
-ENV NGINX_TEMP_PATH=/tmp/nginx
